@@ -1949,6 +1949,7 @@ function hasDockerfile(pkg) {
 }
 
 const resolvers = {
+    'docker-build': hasDockerfile,
     'docker-lint': hasDockerfile,
 };
 
