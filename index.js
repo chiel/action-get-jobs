@@ -1948,9 +1948,20 @@ function hasDockerfile(pkg) {
     }
 }
 
+function hasKubernetesManifest(pkg) {
+    try {
+        require$$0$1.accessSync(`${pkg.path}/.k8s.template.yaml`);
+        return true;
+    }
+    catch (err) {
+        return false;
+    }
+}
+
 const resolvers = {
     'docker-build': hasDockerfile,
     'docker-lint': hasDockerfile,
+    'kubernetes-deploy': hasKubernetesManifest,
 };
 
 function getPackageDescriptions(packageNames) {
