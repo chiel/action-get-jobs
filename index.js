@@ -1938,7 +1938,19 @@ function requireCore () {
 
 var coreExports = requireCore();
 
-const resolvers = {};
+function hasDockerfile(pkg) {
+    try {
+        require$$0$1.accessSync(`${pkg.path}/Dockerfile`);
+        return true;
+    }
+    catch (err) {
+        return false;
+    }
+}
+
+const resolvers = {
+    'docker-lint': hasDockerfile,
+};
 
 function getPackageDescriptions(packageNames) {
     return packageNames.map((name) => {
