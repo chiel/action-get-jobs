@@ -1938,32 +1938,15 @@ function requireCore () {
 
 var coreExports = requireCore();
 
-function hasDockerfile(pkg) {
+function fileExists(file) {
     try {
-        require$$0$1.accessSync(`${pkg.path}/Dockerfile`);
+        require$$0$1.accessSync(file);
         return true;
     }
     catch (err) {
         return false;
     }
 }
-
-function hasKubernetesManifest(pkg) {
-    try {
-        require$$0$1.accessSync(`${pkg.path}/.k8s.template.yaml`);
-        return true;
-    }
-    catch (err) {
-        return false;
-    }
-}
-
-const resolvers = {
-    'docker-build': hasDockerfile,
-    'docker-lint': hasDockerfile,
-    'kubernetes-deploy': hasKubernetesManifest,
-};
-
 function getPackageDescriptions(packageNames) {
     return packageNames.map((name) => {
         const dirName = name.replace(/^[^\/]+\//, '');
@@ -1974,6 +1957,20 @@ function getPackageDescriptions(packageNames) {
         };
     });
 }
+
+function hasDockerfile(pkg) {
+    return fileExists(`${pkg.path}/Dockerfile`);
+}
+
+function hasKubernetesManifest(pkg) {
+    return fileExists(`${pkg.path}/.k8s.template.yaml`);
+}
+
+const resolvers = {
+    'docker-build': hasDockerfile,
+    'docker-lint': hasDockerfile,
+    'kubernetes-deploy': hasKubernetesManifest,
+};
 
 function run() {
     try {
