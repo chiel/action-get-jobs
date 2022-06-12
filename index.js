@@ -1962,6 +1962,10 @@ function hasDockerfile(pkg) {
     return fileExists(`${pkg.path}/Dockerfile`);
 }
 
+function hasJestConfig(pkg) {
+    return fileExists(`${pkg.path}/jest.config.js`);
+}
+
 function hasKubernetesManifest(pkg) {
     return fileExists(`${pkg.path}/.k8s.template.yaml`);
 }
@@ -1969,6 +1973,7 @@ function hasKubernetesManifest(pkg) {
 const resolvers = {
     'docker-build': hasDockerfile,
     'docker-lint': hasDockerfile,
+    'jest-run': hasJestConfig,
     'kubernetes-deploy': hasKubernetesManifest,
 };
 
