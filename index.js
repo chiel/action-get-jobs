@@ -1958,7 +1958,8 @@ function fileExists(file) {
 
 function getPackageDetails(name) {
     const dirName = name.replace(/^[^\/]+\//, '');
-    return { dirName, name, path: require$$4__default$1["default"].resolve(process.cwd(), 'packages', dirName) };
+    const p = `packages/${dirName}`;
+    return { dirName, name, fullPath: require$$4__default$1["default"].resolve(process.cwd(), p), path: p };
 }
 
 function hasScript(pkgPath, scriptName) {
@@ -1973,15 +1974,15 @@ function hasScript(pkgPath, scriptName) {
 }
 
 function hasDockerfile(pkg) {
-    return fileExists(`${pkg.path}/Dockerfile`);
+    return fileExists(`${pkg.fullPath}/Dockerfile`);
 }
 
 function hasKubernetesManifest(pkg) {
-    return fileExists(`${pkg.path}/.k8s.template.yaml`);
+    return fileExists(`${pkg.fullPath}/.k8s.template.yaml`);
 }
 
 function hasTestScript(pkg) {
-    return hasScript(pkg.path, 'test');
+    return hasScript(pkg.fullPath, 'test');
 }
 
 const resolvers = {
