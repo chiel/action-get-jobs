@@ -1943,6 +1943,7 @@ var Job;
     Job["DockerBuild"] = "docker-build";
     Job["DockerLint"] = "docker-lint";
     Job["KubernetesDeploy"] = "kubernetes-deploy";
+    Job["LinterRun"] = "linter-run";
     Job["TestsRun"] = "tests-run";
 })(Job || (Job = {}));
 
@@ -1981,6 +1982,10 @@ function hasKubernetesManifest(pkg) {
     return fileExists(`${pkg.fullPath}/.k8s.template.yaml`);
 }
 
+function hasLintScript(pkg) {
+    return hasScript(pkg.fullPath, 'lint');
+}
+
 function hasTestScript(pkg) {
     return hasScript(pkg.fullPath, 'test');
 }
@@ -1989,6 +1994,7 @@ const resolvers = {
     [Job.DockerBuild]: hasDockerfile,
     [Job.DockerLint]: hasDockerfile,
     [Job.KubernetesDeploy]: hasKubernetesManifest,
+    [Job.LinterRun]: hasLintScript,
     [Job.TestsRun]: hasTestScript,
 };
 function resolvePackageJobs(pkg) {
