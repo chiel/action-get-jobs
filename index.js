@@ -1957,10 +1957,14 @@ function fileExists(file) {
     }
 }
 
+/* istanbul ignore file */
 function getPackageDetails(name) {
-    const dirName = name.replace(/^[^\/]+\//, '');
-    const p = `packages/${dirName}`;
-    return { dirName, name, fullPath: require$$4__default$1["default"].resolve(process.cwd(), p), path: p };
+    const cwd = process.cwd();
+    const bareName = name.replace(/^[^\/]+\//, '');
+    const pkgJsonPath = require.resolve(`${name}/package.json`, { paths: [cwd] });
+    const fullPath = pkgJsonPath.replace('/package.json', '');
+    const path = fullPath.replace(`${cwd}/`, '');
+    return { bareName, fullPath, name, path };
 }
 
 function hasScript(pkgPath, scriptName) {
@@ -2007,8 +2011,6 @@ function run() {
     try {
         const packages = coreExports.getInput('packages', { required: true }).split(',');
         const packageDetails = packages.reduce((acc, name) => (Object.assign(Object.assign({}, acc), { [name]: getPackageDetails(name) })), {});
-        console.info('PACKAGE DETAILS:');
-        console.info(JSON.stringify(packageDetails, null, '  '));
         const packageJobs = Object.values(packageDetails).reduce((acc, pkg) => (Object.assign(Object.assign({}, acc), { [pkg.name]: resolvePackageJobs(pkg) })), {});
         const jobs = Object.entries(packageJobs)
             .reduce((outerAcc, [name, jobs]) => (jobs.reduce((innerAcc, job) => (Object.assign(Object.assign({}, innerAcc), { [job]: [...(innerAcc[job] || []), packageDetails[name]] })), outerAcc)), {});
